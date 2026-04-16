@@ -24,6 +24,14 @@ Si la validacion es correcta, el request se proxyea de forma transparente a `OLL
 - Docker (multi-stage)
 - Docker Compose
 
+## Configuracion TypeScript
+
+Configuracion actual en tsconfig:
+
+- module: Node16
+- moduleResolution: Node16
+- strict: true
+
 ## Arquitectura
 
 Se aplica una separacion inspirada en Arquitectura Hexagonal / Clean Architecture:
@@ -147,6 +155,11 @@ docker compose up --build
 
 - `GET /health`
 	- Healthcheck basico.
+- `GET /ollama/hello`
+	- Ejecuta una llamada real a Ollama con el prompt fijo `hola como estas?`.
+	- Query opcional `model` (default: `llama3.1`).
+	- Devuelve `{ prompt, model, reply }`.
+	- No requiere API key (endpoint de diagnostico).
 - `ANY /v1/*`
 	- Requiere Authorization Bearer valido.
 	- Se proxyea a Ollama.
@@ -160,6 +173,12 @@ curl -X POST http://localhost:9000/v1/chat/completions \
 	-H "Content-Type: application/json" \
 	-H "Authorization: Bearer changeme-local-key" \
 	-d "{\"model\":\"llama3.1\",\"messages\":[{\"role\":\"user\",\"content\":\"Hola\"}],\"stream\":false}"
+```
+
+Endpoint de diagnostico de respuesta de Ollama:
+
+```bash
+curl "http://localhost:9000/ollama/hello?model=llama3.1"
 ```
 
 ## Respuestas de error de autenticacion
