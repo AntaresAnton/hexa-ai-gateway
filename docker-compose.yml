@@ -1,0 +1,14 @@
+services:
+  ai-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:3000"
+    environment:
+      PORT: "3000"
+      OLLAMA_URL: "http://host.docker.internal:11434"
+      GATEWAY_API_KEY: "changeme-local-key"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
